@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <p>{{ branch.name }}</p>
+    <p>{{ branch.description }}</p>
+    <hr>
+    {% for post in branch.posts.all %}
+        <div class="container">
+            <p style="font-weight: 600; font-size: 1.5rem" class="m-0">{{ post.title }}</p>
+            <p>{{ post.description }}</p>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock content %}

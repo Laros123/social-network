@@ -19,7 +19,7 @@ class Branch(models.Model):
 
 class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name='posts')
-    branch = models.ForeignKey(Branch, on_delete=models.DO_NOTHING)
+    branch = models.ForeignKey(Branch, on_delete=models.DO_NOTHING, related_name='posts')
     title = models.CharField(max_length=255)
     description = models.TextField()
     created = models.DateTimeField(auto_now=True)
