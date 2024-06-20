@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <small>{{ post.author.username }}</small>
+    <small><a href="{% url 'branch-detail' post.branch.id %}">{{ post.branch.name }}</a></small>
+    <p class="m-0 bold-text">{{ post.title }}</p>
+    <p>{{ post.description }}</p>
+    <br>
+    {% for comment in post.comments.all %}
+        {% if comment.comments.all %}
+            <small>{{ comment.author.username }}</small>
+            <p>{{ comment.text }}</p>
+            {% for comment_comment in comment.comments.all %}
+                <div class="container ms-2">
+                    <small>{{ comment_comment.author.username }}</small>
+                    <p>{{ comment_comment.text }}</p>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+</div>
+
+{% endblock content %}

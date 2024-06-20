@@ -15,4 +15,8 @@ class BranchDetailView(DetailView):
     model = Branch
     template_name = "forum/branch-detail.html"
     context_object_name = 'branch'
- 
+
+class PostDetailView(DetailView):
+    model = Post
+    template_name = "forum/post-detail.html"
+    context_object_name = 'post'

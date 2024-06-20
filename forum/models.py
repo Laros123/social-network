@@ -33,7 +33,7 @@ class Post(models.Model):
 
 class Commentary(models.Model):
     post = models.ForeignKey(Post, on_delete=models.DO_NOTHING, related_name='comments')
-    commentary = models.ForeignKey('Commentary', on_delete=models.DO_NOTHING, related_name='comment', blank=True, null=True)
+    commentary = models.ForeignKey('Commentary', on_delete=models.DO_NOTHING, related_name='comments', blank=True, null=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
     text = models.TextField()
     created = models.DateTimeField(auto_now=True)
