@@ -1,0 +1,29 @@
+<li class="container mb-1">
+    <div>
+        <small>{{ comment.author.username }}</small>
+        <p class="m-0">{{ comment.text }}</p>
+    </div>
+    <div style="display: flex;">
+        {% if comment.comments.exists %}
+            <a class="nav-link dropdown-toggle me-2" style="font-weight: 600;" data-bs-toggle="collapse" href="#CollapseComment{{ comment.pk }}" role="button" aria-expanded="false" aria-controls="CollapseComment{{ comment.pk }}">Comments</a>
+        {% endif %}
+        <a class="nav-link dropdown-toggle" style="font-weight: 600;" data-bs-toggle="collapse" href="#CollapseReply{{ comment.pk }}" role="button" aria-expanded="false" aria-controls="CollapseReply{{ comment.pk }}">Reply</a>
+    </div>
+    <div class="collapse multi-collapse" id="CollapseReply{{ comment.pk }}">
+        <form action="{% url 'comment-create' post.pk comment.pk %}" style="border: none;" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <textarea class="text-area" name="text" rows="1" id="id_text" onkeyup="textarea_resize(event, 15, 2);"></textarea>
+            <div id="text_area_div"></div>
+            <button type="submit" style="vertical-align: top;" class="btn btn-secondary">Leave comment</button>
+        </form>
+    </div>
+    {% if comment.comments.exists %}
+        <div class="collapse multi-collapse" id="CollapseComment{{ comment.pk }}">
+            <ul>
+                {% for reply in comment.comments.all %}
+                    {% include 'forum/comment.html' with comment=reply %}
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+</li>

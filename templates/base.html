@@ -17,5 +17,21 @@
 
     {% comment %} Bootstrap {% endcomment %}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    
+    <script>
+        function textarea_resize(event, line_height, min_line_count)
+        {
+            var min_line_height = min_line_count * line_height;
+            var obj = event.target;
+            var div = document.getElementById('text_area_div');
+            div.innerHTML = obj.value;
+            var obj_height = div.offsetHeight;
+            if (event.keyCode == 13)
+                obj_height += line_height;
+            else if (obj_height < min_line_height)
+                obj_height = min_line_height;
+            obj.style.height = obj_height + 14 + 'px';
+        }
+    </script>
 </body>
 </html>

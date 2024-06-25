@@ -7,10 +7,11 @@
     <p>{{ branch.description }}</p>
     <hr>
     {% for post in branch.posts.all %}
-        <div class="container">
-            <p class="m-0 bold-text"><a href="{% url 'post-detail' post.id %}" style="text-decoration:none; color:black">{{ post.title }}</a></p>
+        <div class="container card">
+            <p class="m-0 bold-text"><a href="{% url 'post-detail' post.id %}" style="text-decoration:none; color:black" class="stretched-link">{{ post.title }}</a></p>
             <p>{{ post.description }}</p>
         </div>
+        <br>
     {% endfor %}
 </div>
 

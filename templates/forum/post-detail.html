@@ -2,24 +2,26 @@
 
 {% block content %}
 
-<div class="container">
+
+<div class="mb-5">
     <small>{{ post.author.username }}</small>
     <small><a href="{% url 'branch-detail' post.branch.id %}">{{ post.branch.name }}</a></small>
     <p class="m-0 bold-text">{{ post.title }}</p>
     <p>{{ post.description }}</p>
-    <br>
-    {% for comment in post.comments.all %}
-        {% if comment.comments.all %}
-            <small>{{ comment.author.username }}</small>
-            <p>{{ comment.text }}</p>
-            {% for comment_comment in comment.comments.all %}
-                <div class="container ms-2">
-                    <small>{{ comment_comment.author.username }}</small>
-                    <p>{{ comment_comment.text }}</p>
-                </div>
-            {% endfor %}
-        {% endif %}
+</div>
+
+<form action="{% url 'comment-create' post.pk 0 %}" method="post" style="text-align: center;" class="mb-2" enctype="multipart/form-data">
+    {% csrf_token %}
+    <textarea class="text-area" name="text" rows="1" id="id_text" placeholder="Add a comment" onkeyup="textarea_resize(event, 15, 2);"></textarea>
+    <div id="text_area_div"></div>
+    <button type="submit" style="vertical-align: top;" class="btn btn-danger">Comment</button>
+</form>
+
+<div class="container p-0">
+    {% for comment in comments %}
+        {% include 'forum/comment.html' with comment=comment %}
     {% endfor %}
 </div>
+
 
 {% endblock content %}

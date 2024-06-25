@@ -4,9 +4,10 @@
 
 <div class="container">
     {% for branch in branches %}
-        <div class="container">
-            <p>{{ branch.name }}</p>
+        <div class="container card">
+            <p class="bold-text m-0">{{ branch.name }}</p>
             <p>{{ branch.description }}</p>
+            <a href="{% url 'branch-detail' branch.id %}" class="stretched-link"></a>
         </div>
     {% endfor %}
 </div>

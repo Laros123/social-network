@@ -4,3 +4,35 @@
     font-weight: 600;
     font-size: 1.5rem;
 }
+
+.text-area
+{
+  border-radius: 20px;
+  max-width: 40rem;
+  width: -webkit-fill-available;
+  min-width: 10rem;
+  height: 30px;
+  overflow: hidden;
+  padding: 5px;
+  border: 1px solid #000000;
+  font-family: Arial;
+  font-size: 14px;
+  color: #000000;
+  resize: none;
+}
+#text_area_div
+{
+  max-width: 40rem;
+  width: -webkit-fill-available;
+  min-width: 10rem;
+  font-family: Arial;
+  font-size: 14px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  visibility: hidden;
+  position: absolute;
+  left: -9999px;
+}
+ol,ul,li {
+  list-style:none;
+}
