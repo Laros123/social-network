@@ -5,7 +5,7 @@ from django.conf import settings
 
 
 class Branch(models.Model):
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     description = models.TextField()
 
@@ -18,8 +18,8 @@ class Branch(models.Model):
 
 
 class Post(models.Model):
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name='posts')
-    branch = models.ForeignKey(Branch, on_delete=models.DO_NOTHING, related_name='posts')
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='posts')
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='posts')
     title = models.CharField(max_length=255)
     description = models.TextField()
     created = models.DateTimeField(auto_now=True)
@@ -32,9 +32,9 @@ class Post(models.Model):
         verbose_name_plural = "Posts"
 
 class Commentary(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.DO_NOTHING, related_name='comments')
-    commentary = models.ForeignKey('Commentary', on_delete=models.DO_NOTHING, related_name='comments', blank=True, null=True)
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    commentary = models.ForeignKey('Commentary', on_delete=models.CASCADE, related_name='comments', blank=True, null=True)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     text = models.TextField()
     created = models.DateTimeField(auto_now=True)
 
@@ -42,5 +42,6 @@ class Commentary(models.Model):
         return f'{self.text}'
     
     class Meta:
+        ordering=['-created']
         verbose_name = "Comment"
         verbose_name_plural = "Comments"
