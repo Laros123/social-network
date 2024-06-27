@@ -2,17 +2,23 @@
 
 {% block content %}
 
-<div class="container">
-    <h2>{{ branch.name }}</h2>
-    <p>{{ branch.description }}</p>
-    <hr>
-    {% for post in branch.posts.all %}
-        <div class="container card">
-            <p class="m-0 bold-text"><a href="{% url 'post-detail' post.id %}" style="text-decoration:none; color:black" class="stretched-link">{{ post.title }}</a></p>
-            <p>{{ post.description }}</p>
-        </div>
-        <br>
-    {% endfor %}
+
+<div class="row">
+    <div class="col">
+        <h2>{{ branch.name }}</h2>
+        <p>{{ branch.description }}</p>
+    </div>
+    <div class="col">
+        <a style="float: right;" class="btn btn-danger m-2" href="{% url 'post-create' branch.pk %}">Create post</a>
+    </div>
 </div>
+<hr>
+{% for post in branch.posts.all %}
+    <div class="container card">
+        <p class="m-0 bold-text"><a href="{{ post.get_absolute_url }}" style="text-decoration:none; color:black" class="stretched-link">{{ post.title }}</a></p>
+        <p>{{ post.description }}</p>
+    </div>
+    <br>
+{% endfor %}
 
 {% endblock content %}

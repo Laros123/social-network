@@ -2,14 +2,13 @@
 
 {% block content %}
 
-<div class="container">
-    {% for branch in branches %}
-        <div class="container card">
-            <p class="bold-text m-0">{{ branch.name }}</p>
-            <p>{{ branch.description }}</p>
-            <a href="{% url 'branch-detail' branch.id %}" class="stretched-link"></a>
-        </div>
-    {% endfor %}
-</div>
+
+{% for branch in branches %}
+    <div class="container card">
+        <p class="bold-text m-0">{{ branch.name }}</p>
+        <p>{{ branch.description }}</p>
+        <a href="{{ branch.get_absolute_url }}" class="stretched-link"></a>
+    </div>
+{% endfor %}
 
 {% endblock content %}

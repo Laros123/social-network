@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.urls import reverse
 
 # Create your models here.
 
@@ -8,6 +9,9 @@ class Branch(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     description = models.TextField()
+
+    def get_absolute_url(self):
+        return reverse('branch-detail', kwargs={'pk': self.pk})
 
     def __str__(self) -> str:
         return f'{self.name}'
@@ -23,6 +27,10 @@ class Post(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     created = models.DateTimeField(auto_now=True)
+
+    def get_absolute_url(self):
+        return reverse('post-detail', kwargs={'pk': self.pk,
+                                              'bk': self.branch.pk})
 
     def __str__(self) -> str:
         return f'{self.title}'

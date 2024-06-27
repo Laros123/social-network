@@ -1,7 +1,7 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, HttpResponseRedirect
 
-from django.views.generic import ListView, DetailView, View
-from .forms import CommentaryCreationForm
+from django.views.generic import ListView, DetailView, View, CreateView, TemplateView
+from .forms import CommentaryCreationForm, PostCreateForm
 from .models import Branch, Post, Commentary
 
 # Create your views here.
@@ -55,4 +55,28 @@ class CommentaryCreateView(View):
 
             comment.save()
 
-        return redirect('post-detail', pk=comment.post.id)
+        return HttpResponseRedirect(comment.post.get_absolute_url())
+
+class PostCreateView(TemplateView):
+    template_name = "forum/post-create.html"
+    form_class = PostCreateForm
+
+    def get_branch(self):
+        return get_object_or_404(Branch, pk=self.kwargs.get('pk'))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = PostCreateForm()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        post_form = PostCreateForm(request.POST, request.FILES)
+        if post_form.is_valid():
+            post_object = post_form.save(commit=False)
+
+            post_object.author = request.user
+            post_object.branch = self.get_branch()
+
+            post_object.save()
+
+        return HttpResponseRedirect(post_object.get_absolute_url())
