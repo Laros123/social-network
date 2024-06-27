@@ -8,6 +8,9 @@
             <a class="nav-link dropdown-toggle me-2" style="font-weight: 600;" data-bs-toggle="collapse" href="#CollapseComment{{ comment.pk }}" role="button" aria-expanded="false" aria-controls="CollapseComment{{ comment.pk }}">Comments</a>
         {% endif %}
         <a class="nav-link dropdown-toggle" style="font-weight: 600;" data-bs-toggle="collapse" href="#CollapseReply{{ comment.pk }}" role="button" aria-expanded="false" aria-controls="CollapseReply{{ comment.pk }}">Reply</a>
+        <form action="{% url 'comment-delete' post.branch.pk post.pk comment.pk %}" method="post">{% csrf_token %}
+            <button type="submit" style="font-weight: 600;" class="nav-link ms-2">Delete</button>
+        </form>
     </div>
     <div class="collapse multi-collapse" id="CollapseReply{{ comment.pk }}">
         <form action="{% url 'comment-create' post.branch.pk post.pk comment.pk %}" style="border: none;" method="post" enctype="multipart/form-data">
@@ -23,7 +26,7 @@
         <div class="collapse multi-collapse" id="CollapseComment{{ comment.pk }}">
             <ul>
                 {% for reply in comment.comments.all %}
-                    <div class="container mb-1">
+                    <div class="container mt-2">
                         {% include 'forum/comment.html' with comment=reply %}
                     </div>
                 {% endfor %}

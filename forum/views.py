@@ -28,6 +28,15 @@ class PostDetailView(DetailView):
         post = self.get_object()
         context['comments'] = Commentary.objects.filter(post=post, commentary__isnull=True)
         return context
+    
+class CommentDeleteView(View):
+    model = Commentary
+
+    def post(self, request, *args, **kwargs):
+        commentary = self.model.objects.get(pk=self.kwargs.get('cr'))
+        commentary.delete()
+
+        return HttpResponseRedirect(commentary.post.get_absolute_url())
 
 class CommentaryCreateView(View):
     form_class = CommentaryCreationForm
@@ -56,6 +65,15 @@ class CommentaryCreateView(View):
             comment.save()
 
         return HttpResponseRedirect(comment.post.get_absolute_url())
+    
+class PostDeleteView(View):
+    model = Post
+
+    def post(self, request, *args, **kwargs):
+        post_object = self.model.objects.get(pk=self.kwargs.get('pk'))
+        post_object.delete()
+
+        return HttpResponseRedirect(post_object.branch.get_absolute_url())
 
 class PostCreateView(TemplateView):
     template_name = "forum/post-create.html"

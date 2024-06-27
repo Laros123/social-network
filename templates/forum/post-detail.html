@@ -12,7 +12,7 @@
 
 <form action="{% url 'comment-create' post.branch.pk post.pk 0 %}" method="post" style="text-align: center;" class="mb-2" enctype="multipart/form-data">
     {% csrf_token %}
-    <div style="max-width: 780px;" id="text_area_div"></div>
+    <div id="text_area_div"></div>
     <div class="text-area-div">
         <textarea class="text-area" name="text" rows="1" id="id_text" placeholder="Add a comment" onkeyup="textarea_resize(event, 15, 2);"></textarea>
         <button type="submit" style="vertical-align: top; float: right" class="btn btn-danger m-2">Comment</button>

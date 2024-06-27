@@ -18,6 +18,10 @@
         <p class="m-0 bold-text"><a href="{{ post.get_absolute_url }}" style="text-decoration:none; color:black" class="stretched-link">{{ post.title }}</a></p>
         <p>{{ post.description }}</p>
     </div>
+    <form action="{% url 'post-delete' branch.pk post.pk %}" method="post">
+        {% csrf_token %}
+        <input type="submit" class="btn btn-danger" value="Delete">
+    </form>
     <br>
 {% endfor %}
 
