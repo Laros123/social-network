@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Post, Commentary, Branch
+from .models import Post, Commentary, Branch, Rating, Grade
 
 # Register your models here.
 
@@ -20,3 +20,5 @@ class CommentaryAdmin(admin.ModelAdmin):
 admin.site.register(Post, PostAdmin)
 admin.site.register(Branch, BranchAdmin)
 admin.site.register(Commentary, CommentaryAdmin)
+admin.site.register(Rating)
+admin.site.register(Grade)

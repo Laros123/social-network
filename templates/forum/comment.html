@@ -11,6 +11,11 @@
         <form action="{% url 'comment-delete' post.branch.pk post.pk comment.pk %}" method="post">{% csrf_token %}
             <button type="submit" style="font-weight: 600;" class="nav-link ms-2">Delete</button>
         </form>
+        <div class="rating-buttons">
+            <button class="btn btn-sm btn-primary" data-rating="{{ comment.rating.id }}" data-value="1">Лайк</button>
+            <button class="btn btn-sm btn-secondary" data-rating="{{ comment.rating.id }}" data-value="-1">Дизлайк</button>
+            <button class="btn btn-sm btn-secondary rating-sum">{{ comment.rating.get_rating }}</button>
+        </div>  
     </div>
     <div class="collapse multi-collapse" id="CollapseReply{{ comment.pk }}">
         <form action="{% url 'comment-create' post.branch.pk post.pk comment.pk %}" style="border: none;" method="post" enctype="multipart/form-data">

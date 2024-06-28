@@ -4,6 +4,25 @@ from django.urls import reverse
 
 # Create your models here.
 
+class Rating(models.Model):
+    def get_rating(self):
+        return sum([grade.value for grade in self.grades.all()])
+
+class Grade(models.Model):
+    rating = models.ForeignKey(to=Rating, on_delete=models.CASCADE, related_name='grades')
+    user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)
+    value = models.IntegerField(choices=[(1, 'Like'), (-1, 'Dislike')])
+    time_create = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('rating', 'user')
+        ordering = ('-time_create',)
+        indexes = [models.Index(fields=['-time_create', 'value'])]
+        verbose_name = 'Grade'
+        verbose_name_plural = 'Grades'
+    
+    def __str__(self):
+        return f'{self.user.username} {self.value}'
 
 class Branch(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -27,6 +46,7 @@ class Post(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     created = models.DateTimeField(auto_now=True)
+    rating = models.OneToOneField(Rating, on_delete=models.CASCADE, related_name='post', blank=True, null=True)
 
     def get_absolute_url(self):
         return reverse('post-detail', kwargs={'pk': self.pk,
@@ -45,6 +65,7 @@ class Commentary(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     text = models.TextField()
     created = models.DateTimeField(auto_now=True)
+    rating = models.OneToOneField(Rating, on_delete=models.CASCADE, related_name='comment', blank=True, null=True)
 
     def __str__(self) -> str:
         return f'{self.text}'

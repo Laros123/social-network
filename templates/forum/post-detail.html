@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 
@@ -9,6 +10,12 @@
     <p class="m-0 bold-text">{{ post.title }}</p>
     <p>{{ post.description }}</p>
 </div>
+
+<div class="rating-buttons">
+    <button class="btn btn-sm btn-primary" data-rating="{{ post.rating.id }}" data-value="1">Лайк</button>
+    <button class="btn btn-sm btn-secondary" data-rating="{{ post.rating.id }}" data-value="-1">Дизлайк</button>
+    <button class="btn btn-sm btn-secondary rating-sum">{{ post.rating.get_rating }}</button>
+</div>  
 
 <form action="{% url 'comment-create' post.branch.pk post.pk 0 %}" method="post" style="text-align: center;" class="mb-2" enctype="multipart/form-data">
     {% csrf_token %}
@@ -28,6 +35,11 @@
         <p>There are no comments here yet. You can make the first one!</p>
     {% endif %}
 </div>
+       
 
 
 {% endblock content %}
+
+{% block script %}
+<script src="{% static 'js/ratings.js' %}"></script>
+{% endblock script %}

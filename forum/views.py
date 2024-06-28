@@ -1,8 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect, HttpResponseRedirect
+from django.http import JsonResponse
 
 from django.views.generic import ListView, DetailView, View, CreateView, TemplateView
 from .forms import CommentaryCreationForm, PostCreateForm
-from .models import Branch, Post, Commentary
+from .models import Branch, Post, Commentary, Rating, Grade
 
 # Create your views here.
 
@@ -51,17 +52,17 @@ class CommentaryCreateView(View):
     
     def post(self, request, *args, **kwargs):
         comment_form = CommentaryCreationForm(request.POST, request.FILES)
-        print(comment_form)
+
         if comment_form.is_valid():
             comment = comment_form.save(commit=False)
 
             comment.author = request.user
             comment.post = self.get_post()
-
-            print(self.kwargs.get('cr'))
             if self.kwargs.get('cr'):
                 comment.commentary = self.get_comment()
-
+            comment.save()
+            rating = Rating.objects.create()
+            comment.rating = rating
             comment.save()
 
         return HttpResponseRedirect(comment.post.get_absolute_url())
@@ -94,7 +95,33 @@ class PostCreateView(TemplateView):
 
             post_object.author = request.user
             post_object.branch = self.get_branch()
-
+            post_object.save()
+            rating = Rating.objects.create()
+            post_object.rating = rating
             post_object.save()
 
         return HttpResponseRedirect(post_object.get_absolute_url())
+
+
+class GradeCreateView(View):
+    model = Grade
+    
+    def post(self, request, *args, **kwargs):
+        rating = request.POST.get('rating')
+        value = int(request.POST.get('value'))
+        user = request.user if request.user.is_authenticated else None
+        grade, created = self.model.objects.get_or_create(
+            rating=Rating.objects.get(pk=rating),
+            defaults={'value': value, 'user': user},
+        )
+        
+        if not created:
+            if grade.value == value:
+                grade.delete()
+                return JsonResponse({'status': 'deleted', 'rating_sum': grade.rating.get_rating()})
+            else:
+                grade.value = value
+                grade.user = user
+                grade.save()
+                return JsonResponse({'status': 'updated', 'rating_sum': grade.rating.get_rating()})
+        return JsonResponse({'status': 'created', 'rating_sum': grade.rating.get_rating()})
