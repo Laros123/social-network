@@ -21,13 +21,14 @@ class BranchDetailView(DetailView):
 class PostDetailView(DetailView):
     model = Post
     template_name = "forum/post-detail.html"
-    context_object_name = 'post'
+    context_object_name = 'post'        
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = CommentaryCreationForm()
         post = self.get_object()
         context['comments'] = Commentary.objects.filter(post=post, commentary__isnull=True)
+        context['user_thumb'] = self.object.rating.grades.filter(user=self.request.user).last()
         return context
     
 class CommentDeleteView(View):
@@ -112,16 +113,24 @@ class GradeCreateView(View):
         user = request.user if request.user.is_authenticated else None
         grade, created = self.model.objects.get_or_create(
             rating=Rating.objects.get(pk=rating),
-            defaults={'value': value, 'user': user},
+            user = user,
+            defaults={'value': value},
         )
         
         if not created:
             if grade.value == value:
                 grade.delete()
-                return JsonResponse({'status': 'deleted', 'rating_sum': grade.rating.get_rating()})
+                return JsonResponse({'status': 'deleted', 'rating_sum': grade.rating.get_rating(), 'grade': 0})
             else:
                 grade.value = value
                 grade.user = user
                 grade.save()
-                return JsonResponse({'status': 'updated', 'rating_sum': grade.rating.get_rating()})
-        return JsonResponse({'status': 'created', 'rating_sum': grade.rating.get_rating()})
+                return JsonResponse({'status': 'updated', 'rating_sum': grade.rating.get_rating(), 'grade': grade.value})
+        return JsonResponse({'status': 'created', 'rating_sum': grade.rating.get_rating(), 'grade': grade.value})
+    
+def grade_get_view(request):
+    comment = Commentary.objects.get(pk=request.GET.get('comment'))
+    grade = comment.rating.grades.all().filter(user=request.user).last()
+    if grade:
+        return JsonResponse({'grade': grade.value})
+    return JsonResponse({'grade': 0})

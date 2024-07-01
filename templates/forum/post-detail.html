@@ -11,15 +11,26 @@
     <p>{{ post.description }}</p>
 </div>
 
-<div class="rating-buttons">
-    <button class="btn btn-sm btn-primary" data-rating="{{ post.rating.id }}" data-value="1">Лайк</button>
-    <button class="btn btn-sm btn-secondary" data-rating="{{ post.rating.id }}" data-value="-1">Дизлайк</button>
-    <button class="btn btn-sm btn-secondary rating-sum">{{ post.rating.get_rating }}</button>
+<div style="display: flex; align-items: flex-start" class="rating-buttons">
+    <button class="btn btn-sm btn-primary me-2" data-rating="{{ post.rating.id }}" data-value="1">
+        <i class="fa fa-thumbs-up
+    {% if user_thumb.value == 1 %}
+    dark-color
+    {% endif %}" data-rating="{{ post.rating.id }}" data-value="1"></i>
+    </button>
+    <p class="rating-sum me-2">{{ post.rating.get_rating }}</p>
+    <button class="btn btn-sm btn-danger" data-rating="{{ post.rating.id }}" data-value="-1">
+        <i class="fa fa-thumbs-down
+    {% if user_thumb.value == -1 %}
+    dark-color
+    {% endif %}" data-rating="{{ post.rating.id }}" data-value="-1"></i>
+    </button>
 </div>  
 
 <form action="{% url 'comment-create' post.branch.pk post.pk 0 %}" method="post" style="text-align: center;" class="mb-2" enctype="multipart/form-data">
     {% csrf_token %}
     <div id="text_area_div"></div>
+    
     <div class="text-area-div">
         <textarea class="text-area" name="text" rows="1" id="id_text" placeholder="Add a comment" onkeyup="textarea_resize(event, 15, 2);"></textarea>
         <button type="submit" style="vertical-align: top; float: right" class="btn btn-danger m-2">Comment</button>

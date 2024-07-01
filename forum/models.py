@@ -14,6 +14,7 @@ class Grade(models.Model):
     value = models.IntegerField(choices=[(1, 'Like'), (-1, 'Dislike')])
     time_create = models.DateTimeField(auto_now_add=True)
 
+
     class Meta:
         unique_together = ('rating', 'user')
         ordering = ('-time_create',)

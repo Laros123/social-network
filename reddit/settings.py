@@ -54,6 +54,15 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'reddit.urls'
 
+"""{
+    'BACKEND': 'django.template.backends.jinja2.Jinja2',
+    'DIRS': [BASE_DIR / 'templates'],
+    'APP_DIRS': True,
+    'OPTIONS': {
+        'environment': 'reddit.jinja2.environment',
+    },
+},"""
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

@@ -52,3 +52,6 @@
 ol,ul,li {
   list-style:none;
 }
+.dark-color {
+  color: black;
+}
