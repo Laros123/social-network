@@ -3,20 +3,20 @@
         <small>{{ comment.author.username }}</small>
         <p class="m-0">{{ comment.text }}</p>
     </div>
-    <div style="display: flex;">
+    <div style="display: flex">
+        <div style="display: flex; align-items: flex-start" class="rating-buttons comment" data-comment="{{ comment.id }}">
+            <button class="btn btn-sm btn-outline-dark" style="border: none; border-radius:40%" data-rating="{{ comment.rating.id }}" data-value="1">
+                <i class="fa fa-thumbs-up fs-5 far" data-rating="{{ comment.rating.id }}" data-value="1"></i>
+            </button>
+            <p class="rating-sum">{{ comment.rating.get_rating }}</p>
+            <button class="btn btn-sm btn-outline-dark" style="border: none; border-radius:40%" data-rating="{{ comment.rating.id }}" data-value="-1">
+                <i class="fa fa-thumbs-down fs-5 far" data-rating="{{ comment.rating.id }}" data-value="-1"></i>
+            </button>
+        </div>
         {% if comment.comments.exists %}
             <a class="nav-link dropdown-toggle me-2" style="font-weight: 600;" data-bs-toggle="collapse" href="#CollapseComment{{ comment.pk }}" role="button" aria-expanded="false" aria-controls="CollapseComment{{ comment.pk }}">Comments</a>
         {% endif %}
         <a class="nav-link dropdown-toggle" style="font-weight: 600;" data-bs-toggle="collapse" href="#CollapseReply{{ comment.pk }}" role="button" aria-expanded="false" aria-controls="CollapseReply{{ comment.pk }}">Reply</a>
-        <div style="display: flex; align-items: flex-start" class="rating-buttons ms-2 comment" data-comment="{{ comment.id }}">
-            <button class="btn btn-sm btn-primary me-2" data-rating="{{ comment.rating.id }}" data-value="1">
-                <i class="fa fa-thumbs-up" data-rating="{{ comment.rating.id }}" data-value="1"></i>
-            </button>
-            <p class="rating-sum me-2">{{ comment.rating.get_rating }}</p>
-            <button class="btn btn-sm btn-danger" data-rating="{{ comment.rating.id }}" data-value="-1">
-                <i class="fa fa-thumbs-down" data-rating="{{ comment.rating.id }}" data-value="-1"></i>
-            </button>
-        </div>
         <form action="{% url 'comment-delete' post.branch.pk post.pk comment.pk %}" method="post">{% csrf_token %}
             <button type="submit" style="font-weight: 600;" class="nav-link ms-2">Delete</button>
         </form>

@@ -10,7 +10,7 @@ class Rating(models.Model):
 
 class Grade(models.Model):
     rating = models.ForeignKey(to=Rating, on_delete=models.CASCADE, related_name='grades')
-    user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)
+    user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True, related_name='grades')
     value = models.IntegerField(choices=[(1, 'Like'), (-1, 'Dislike')])
     time_create = models.DateTimeField(auto_now_add=True)
 
@@ -63,7 +63,7 @@ class Post(models.Model):
 class Commentary(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
     commentary = models.ForeignKey('Commentary', on_delete=models.CASCADE, related_name='comments', blank=True, null=True)
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='comments')
     text = models.TextField()
     created = models.DateTimeField(auto_now=True)
     rating = models.OneToOneField(Rating, on_delete=models.CASCADE, related_name='comment', blank=True, null=True)

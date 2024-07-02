@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="d-flex mb-3">
+    <img src="{{ profile.image.url }}" style="height:150px; width:150px; border-radius:50%; overflow:hidden;">
+    <p style="font-size: 2rem;">{{ profile.user.username }}</p>
+    <div class="ms-auto">
+        <a class="btn btn-outline-dark" href="#">Settings</a>
+    </div>
+</div>
+<div class="d-flex">
+    {% block activity %}
+        <a class="btn btn-outline-dark me-2" href="{% url 'profile' profile.pk 'posts' %}">Posts</a>
+        <a class="btn btn-outline-dark me-2" href="{% url 'profile' profile.pk 'comments' %}">Comments</a>
+        <a class="btn btn-outline-dark me-2" href="{% url 'profile' profile.pk 'upvoted' %}">Upvoted</a>
+        <a class="btn btn-outline-dark me-2" href="{% url 'profile' profile.pk 'downvoted' %}">Downvoted</a>
+    {% endblock activity %}
+</div>
+<div>
+    {% block objects %}
+    {% endblock objects %}
+</div>
+
+{% endblock content %}

@@ -4,7 +4,7 @@
 {% block content %}
 
 
-<div class="mb-5">
+<div class="mb-1">
     <small>{{ post.author.username }}</small>
     <small><a href="{{ post.branch.get_absolute_url }}">{{ post.branch.name }}</a></small>
     <p class="m-0 bold-text">{{ post.title }}</p>
@@ -12,15 +12,15 @@
 </div>
 
 <div style="display: flex; align-items: flex-start" class="rating-buttons">
-    <button class="btn btn-sm btn-primary me-2" data-rating="{{ post.rating.id }}" data-value="1">
-        <i class="fa fa-thumbs-up
+    <button class="btn btn-sm btn-outline-dark" style="border: none; border-radius:40%" data-rating="{{ post.rating.id }}" data-value="1">
+        <i class="fa fa-thumbs-up fs-5 far
     {% if user_thumb.value == 1 %}
     dark-color
     {% endif %}" data-rating="{{ post.rating.id }}" data-value="1"></i>
     </button>
-    <p class="rating-sum me-2">{{ post.rating.get_rating }}</p>
-    <button class="btn btn-sm btn-danger" data-rating="{{ post.rating.id }}" data-value="-1">
-        <i class="fa fa-thumbs-down
+    <p class="rating-sum">{{ post.rating.get_rating }}</p>
+    <button class="btn btn-sm btn-outline-dark" style="border: none; border-radius:40%" data-rating="{{ post.rating.id }}" data-value="-1">
+        <i class="fa fa-thumbs-down fs-5 far
     {% if user_thumb.value == -1 %}
     dark-color
     {% endif %}" data-rating="{{ post.rating.id }}" data-value="-1"></i>

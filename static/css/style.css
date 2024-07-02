@@ -1,4 +1,11 @@
+:root {
+  --bg-color: #ecebeb;
+  --main-color: #fafafa;
+}
 
+html, body {
+  height: 100%;
+}
 
 .bold-text {
     font-weight: 600;
@@ -34,6 +41,7 @@
   font-family: Arial;
   font-size: 14px;
   color: #000000;
+  background-color: var(--main-color);
   resize: none;
   border: none;
 }
@@ -53,5 +61,11 @@ ol,ul,li {
   list-style:none;
 }
 .dark-color {
-  color: black;
+  font-weight: 600;
+}
+.dark-color.fa-thumbs-up {
+  color: rgb(40, 81, 216);
+}
+.dark-color.fa-thumbs-down {
+  color: rgb(218, 40, 40);
 }
