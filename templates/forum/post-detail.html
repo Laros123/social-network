@@ -4,28 +4,31 @@
 {% block content %}
 
 
-<div class="mb-1">
+<div class="mb-0">
     <small>{{ post.author.username }}</small>
     <small><a href="{{ post.branch.get_absolute_url }}">{{ post.branch.name }}</a></small>
     <p class="m-0 bold-text">{{ post.title }}</p>
-    <p>{{ post.description }}</p>
+    <p class="mb-1">{{ post.description }}</p>
 </div>
 
-<div style="display: flex; align-items: flex-start" class="rating-buttons">
-    <button class="btn btn-sm btn-outline-dark" style="border: none; border-radius:40%" data-rating="{{ post.rating.id }}" data-value="1">
-        <i class="fa fa-thumbs-up fs-5 far
-    {% if user_thumb.value == 1 %}
-    dark-color
-    {% endif %}" data-rating="{{ post.rating.id }}" data-value="1"></i>
-    </button>
-    <p class="rating-sum">{{ post.rating.get_rating }}</p>
-    <button class="btn btn-sm btn-outline-dark" style="border: none; border-radius:40%" data-rating="{{ post.rating.id }}" data-value="-1">
-        <i class="fa fa-thumbs-down fs-5 far
-    {% if user_thumb.value == -1 %}
-    dark-color
-    {% endif %}" data-rating="{{ post.rating.id }}" data-value="-1"></i>
-    </button>
-</div>  
+<div class="d-flex">
+    <div style="align-items: flex-start" class="rating-buttons d-flex me-2">
+        <button class="btn btn-sm btn-outline-dark" style="border: none; border-radius:40%" data-rating="{{ post.rating.id }}" data-value="1">
+            <i class="fa fa-thumbs-up fs-5 far
+        {% if user_thumb.value == 1 %}
+        dark-color
+        {% endif %}" data-rating="{{ post.rating.id }}" data-value="1"></i>
+        </button>
+        <p class="rating-sum">{{ post.rating.get_rating }}</p>
+        <button class="btn btn-sm btn-outline-dark" style="border: none; border-radius:40%" data-rating="{{ post.rating.id }}" data-value="-1">
+            <i class="fa fa-thumbs-down fs-5 far
+        {% if user_thumb.value == -1 %}
+        dark-color
+        {% endif %}" data-rating="{{ post.rating.id }}" data-value="-1"></i>
+        </button>
+    </div>  
+    <p><i class="fa fa-comments" aria-hidden="true"></i> {{ post.comments.all|length }}</p>
+</div>
 
 <form action="{% url 'comment-create' post.branch.pk post.pk 0 %}" method="post" style="text-align: center;" class="mb-2" enctype="multipart/form-data">
     {% csrf_token %}

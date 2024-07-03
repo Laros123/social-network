@@ -1,7 +1,7 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from .views import ProfileDetailView
 
 urlpatterns = [
-    path('profile/<int:pk>/<str:ac>/', ProfileDetailView.as_view(), name='profile')
+    re_path(r'^profile/(?P<pk>\d+)(?:/(?P<ac>\w+))?/$', ProfileDetailView.as_view(), name='profile')
 ]

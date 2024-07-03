@@ -12,8 +12,8 @@
       </ul>
       <div class="d-flex">
         <a class="btn btn-outline-secondary m-2" href="{% url 'branch-list' %}">Branches</a>
-        <a class="m-2" href="{% url 'profile' user.profile.pk 'nothing' %}">
-            <img style="border-radius: 50%;" src="{{ user.profile.image.url }}" width="40" height="40" class="d-inline-block align-text-top">
+        <a class="m-2" href="{% url 'profile' user.profile.pk %}">
+          <img style="border-radius: 50%;" src="{{ user.profile.image.url }}" width="40" height="40" class="d-inline-block align-text-top">
         </a>
       </div>
     </div>

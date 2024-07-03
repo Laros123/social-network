@@ -13,7 +13,7 @@ class ProfileDetailView(DetailView):
     context_object_name = 'profile'
 
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        type_of_activity = self.kwargs.get('ac')
+        type_of_activity = self.kwargs.get('ac', 'none')
         if type_of_activity == 'posts':
             self.template_name = "profile/profile-detail-posts.html"
         elif type_of_activity == 'comments':
@@ -22,5 +22,7 @@ class ProfileDetailView(DetailView):
             self.template_name = "profile/profile-detail-upvoted.html"
         elif type_of_activity == 'downvoted':
             self.template_name = "profile/profile-detail-downvoted.html"
+        if type_of_activity == 'none':
+            print(type_of_activity)
             
         return super().get(request, *args, **kwargs)

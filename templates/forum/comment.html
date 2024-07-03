@@ -1,10 +1,20 @@
 <li>
     <div>
-        <small>{{ comment.author.username }}</small>
-        <p class="m-0">{{ comment.text }}</p>
+        <div class="d-flex">
+            <div style="align-items: flex-end; flex-direction: row; background-color: transparent; border: none;" class="card d-flex">
+                <img style="border-radius: 50%;" src="{{ comment.author.profile.image.url }}" width="38" height="38" class="d-inline-block align-text-top">
+                <small style="font-weight: 500;" class="m-1">{{ comment.author.username }}</small>
+                <small style="color: gray;" class="m-1">{{ comment.created }}</small>
+                <a class="stretched-link" href="{% url 'profile' comment.author.profile.pk %}"></a>
+            </div>
+        </div>
+        <p style="margin-left: 40px; " class="mb-0">{{ comment.text }}</p>
     </div>
-    <div style="display: flex">
-        <div style="display: flex; align-items: flex-start" class="rating-buttons comment" data-comment="{{ comment.id }}">
+    <div {% if not comment.comments.exists %}style="margin-left: 32px;"{% endif %} class="d-flex">
+        {% if comment.comments.exists %}
+            <a class="nav-link dropdown-toggle me-2" style="font-weight: 1000;" data-bs-toggle="collapse" href="#CollapseComment{{ comment.pk }}" role="button" aria-expanded="false" aria-controls="CollapseComment{{ comment.pk }}">+</a>
+        {% endif %}
+        <div style="align-items: flex-start" class="rating-buttons comment d-flex" data-comment="{{ comment.id }}">
             <button class="btn btn-sm btn-outline-dark" style="border: none; border-radius:40%" data-rating="{{ comment.rating.id }}" data-value="1">
                 <i class="fa fa-thumbs-up fs-5 far" data-rating="{{ comment.rating.id }}" data-value="1"></i>
             </button>
@@ -13,9 +23,6 @@
                 <i class="fa fa-thumbs-down fs-5 far" data-rating="{{ comment.rating.id }}" data-value="-1"></i>
             </button>
         </div>
-        {% if comment.comments.exists %}
-            <a class="nav-link dropdown-toggle me-2" style="font-weight: 600;" data-bs-toggle="collapse" href="#CollapseComment{{ comment.pk }}" role="button" aria-expanded="false" aria-controls="CollapseComment{{ comment.pk }}">Comments</a>
-        {% endif %}
         <a class="nav-link dropdown-toggle" style="font-weight: 600;" data-bs-toggle="collapse" href="#CollapseReply{{ comment.pk }}" role="button" aria-expanded="false" aria-controls="CollapseReply{{ comment.pk }}">Reply</a>
         <form action="{% url 'comment-delete' post.branch.pk post.pk comment.pk %}" method="post">{% csrf_token %}
             <button type="submit" style="font-weight: 600;" class="nav-link ms-2">Delete</button>
