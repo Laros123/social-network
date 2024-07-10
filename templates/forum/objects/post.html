@@ -1,0 +1,20 @@
+<div class="container border mt-3 mb-2" style="border-width: 2px; border-radius: 20px">
+    <div class="card" style="border: none; background-color: transparent">
+        <p class="m-0 bold-text"><a href="{{ post.get_absolute_url }}" style="text-decoration:none; color:black" class="stretched-link">{{ post.title }}</a></p>
+        <p>{{ post.description }}</p>
+    </div>
+    <div class="d-flex">
+        <div style="flex-wrap: wrap; align-content: flex-end;" class="d-flex">
+            {% include 'forum/objects/rating-buttons.html' with object=post %}
+            <p class="m-0"><i class="fa fa-comments" aria-hidden="true"></i> {{ post.comments.all|length }}</p>
+        </div>
+        {% if request.user.is_authenticated %}
+        {% if request.user == post.author %}
+        <form action="{% url 'post-delete' post.branch.pk post.pk %}" method="post" class="m-2 ms-auto">
+            {% csrf_token %}
+            <input type="submit" class="btn btn-danger" value="Delete">
+        </form>
+        {% endif %}
+        {% endif %}
+    </div>
+</div>

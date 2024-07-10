@@ -1,12 +1,18 @@
-from django.shortcuts import render, get_object_or_404, redirect, HttpResponseRedirect
+from typing import Any
+from django.shortcuts import render, get_object_or_404, redirect, HttpResponseRedirect, resolve_url
 from django.http import JsonResponse
+from django.db.models import Sum
 
 from django.views.generic import ListView, DetailView, View, CreateView, TemplateView
 from .forms import CommentaryCreationForm, PostCreateForm
 from .models import Branch, Post, Commentary, Rating, Grade
+from django.db.models import Sum
+from .mixins import HavePermissionsMixin
 
 # Create your views here.
 
+def index(request):
+    return HttpResponseRedirect(resolve_url('post-list'))
 
 class BranchListView(ListView):
     model = Branch
@@ -18,6 +24,21 @@ class BranchDetailView(DetailView):
     template_name = "forum/branch-detail.html"
     context_object_name = 'branch'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['posts'] = self.get_object().posts.all().order_by('-rating__sum_rating')
+        return context
+
+class PostListView(ListView):
+    model = Post
+    template_name = "forum/post-list.html"
+    context_object_name = 'posts'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['posts'] = self.model.objects.order_by('-rating__sum_rating')
+        return context
+
 class PostDetailView(DetailView):
     model = Post
     template_name = "forum/post-detail.html"
@@ -27,21 +48,25 @@ class PostDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['form'] = CommentaryCreationForm()
         post = self.get_object()
-        context['comments'] = Commentary.objects.filter(post=post, commentary__isnull=True)
+        context['comments'] = Commentary.objects.filter(post=post, commentary__isnull=True).order_by('-rating__sum_rating')
         context['user_thumb'] = self.object.rating.grades.filter(user=self.request.user).last()
         return context
     
-class CommentDeleteView(View):
+class CommentDeleteView(HavePermissionsMixin, View):
     model = Commentary
 
+    def get_object(self):
+        return get_object_or_404(self.model, pk=self.kwargs.get('cr'))
+
     def post(self, request, *args, **kwargs):
-        commentary = self.model.objects.get(pk=self.kwargs.get('cr'))
+        commentary = self.get_object()
         commentary.delete()
 
         return HttpResponseRedirect(commentary.post.get_absolute_url())
 
 class CommentaryCreateView(View):
     form_class = CommentaryCreationForm
+    model = Commentary
 
     def get_post(self, **kwargs):
         post_id = self.kwargs.get('pk')
@@ -68,11 +93,14 @@ class CommentaryCreateView(View):
 
         return HttpResponseRedirect(comment.post.get_absolute_url())
     
-class PostDeleteView(View):
+class PostDeleteView(HavePermissionsMixin, View):
     model = Post
 
+    def get_object(self):
+        return get_object_or_404(self.model, pk=self.kwargs.get('pk'))
+
     def post(self, request, *args, **kwargs):
-        post_object = self.model.objects.get(pk=self.kwargs.get('pk'))
+        post_object = self.get_object()
         post_object.delete()
 
         return HttpResponseRedirect(post_object.branch.get_absolute_url())
@@ -80,6 +108,7 @@ class PostDeleteView(View):
 class PostCreateView(TemplateView):
     template_name = "forum/post-create.html"
     form_class = PostCreateForm
+    model = Post
 
     def get_branch(self):
         return get_object_or_404(Branch, pk=self.kwargs.get('pk'))
@@ -108,29 +137,32 @@ class GradeCreateView(View):
     model = Grade
     
     def post(self, request, *args, **kwargs):
-        rating = request.POST.get('rating')
+        rating = Rating.objects.get(pk=request.POST.get('rating'))
         value = int(request.POST.get('value'))
         user = request.user if request.user.is_authenticated else None
         grade, created = self.model.objects.get_or_create(
-            rating=Rating.objects.get(pk=rating),
+            rating=rating,
             user = user,
             defaults={'value': value},
         )
-        
+        response = JsonResponse({'status': 'created', 'rating_sum': grade.rating.get_rating(), 'grade': grade.value})
         if not created:
             if grade.value == value:
                 grade.delete()
-                return JsonResponse({'status': 'deleted', 'rating_sum': grade.rating.get_rating(), 'grade': 0})
+                response = JsonResponse({'status': 'deleted', 'rating_sum': grade.rating.get_rating(), 'grade': 0})
             else:
                 grade.value = value
                 grade.user = user
                 grade.save()
-                return JsonResponse({'status': 'updated', 'rating_sum': grade.rating.get_rating(), 'grade': grade.value})
-        return JsonResponse({'status': 'created', 'rating_sum': grade.rating.get_rating(), 'grade': grade.value})
+                response = JsonResponse({'status': 'updated', 'rating_sum': grade.rating.get_rating(), 'grade': grade.value})
     
-def grade_get_view(request):
-    comment = Commentary.objects.get(pk=request.GET.get('comment'))
-    grade = comment.rating.grades.all().filter(user=request.user).last()
+        rating.sum_rating = rating.get_rating()
+        rating.save()
+        return response
+    
+def get_rating_view(request):
+    rating = Rating.objects.get(pk=request.GET.get('rating'))
+    grade = rating.grades.all().filter(user=request.user).last()
     if grade:
         return JsonResponse({'grade': grade.value})
     return JsonResponse({'grade': 0})

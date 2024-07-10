@@ -9,7 +9,8 @@
 {% endblock activity %}
 
 {% block objects %}
+<br>
 {% for post in profile.user.posts.all %}
-    <p>{{post}}</p>
+    {% include 'forum/objects/post.html' with post=post branch=post.branch %}
 {% endfor %}
 {% endblock objects %}

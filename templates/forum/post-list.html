@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% for post in posts %}
+    {% include 'forum/objects/post.html' with post=post %}
+{% endfor %}
+
+{% endblock content %}

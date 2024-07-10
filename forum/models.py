@@ -5,6 +5,8 @@ from django.urls import reverse
 # Create your models here.
 
 class Rating(models.Model):
+    sum_rating = models.IntegerField(default=0)
+
     def get_rating(self):
         return sum([grade.value for grade in self.grades.all()])
 
@@ -13,7 +15,6 @@ class Grade(models.Model):
     user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True, related_name='grades')
     value = models.IntegerField(choices=[(1, 'Like'), (-1, 'Dislike')])
     time_create = models.DateTimeField(auto_now_add=True)
-
 
     class Meta:
         unique_together = ('rating', 'user')
@@ -49,6 +50,11 @@ class Post(models.Model):
     created = models.DateTimeField(auto_now=True)
     rating = models.OneToOneField(Rating, on_delete=models.CASCADE, related_name='post', blank=True, null=True)
 
+    def delete(self, *args, **kwargs):
+        if self.rating:
+            self.rating.delete()
+        super(Post, self).delete(*args, **kwargs)
+
     def get_absolute_url(self):
         return reverse('post-detail', kwargs={'pk': self.pk,
                                               'bk': self.branch.pk})
@@ -67,6 +73,11 @@ class Commentary(models.Model):
     text = models.TextField()
     created = models.DateTimeField(auto_now=True)
     rating = models.OneToOneField(Rating, on_delete=models.CASCADE, related_name='comment', blank=True, null=True)
+
+    def delete(self, *args, **kwargs):
+        if self.rating:
+            self.rating.delete()
+        super(Commentary, self).delete(*args, **kwargs)
 
     def __str__(self) -> str:
         return f'{self.text}'

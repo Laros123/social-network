@@ -9,9 +9,14 @@
 {% endblock activity %}
 
 {% block objects %}
+<br>
 {% for grade in profile.user.grades.all %}
     {% if grade.value == -1 %}
-        <p>{{grade}}</p>
+        {% if grade.rating.post %}
+            {% include 'forum/objects/post.html' with post=grade.rating.post branch=grade.rating.post.branch %}
+        {% else %}
+            {% include 'forum/objects/comment.html' with comment=grade.rating.comment collapse_comments=False %}
+        {% endif %}
     {% endif %}
 {% endfor %}
 {% endblock objects %}

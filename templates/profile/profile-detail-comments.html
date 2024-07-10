@@ -9,7 +9,8 @@
 {% endblock activity %}
 
 {% block objects %}
+<br>
 {% for comment in profile.user.comments.all %}
-    <p>{{comment}}</p>
+    {% include 'forum/objects/comment.html' with comment=comment collapse_comments=False %}
 {% endfor %}
 {% endblock objects %}

@@ -15,26 +15,24 @@ function pressThumb(div, grade) {
 
 ratingButtons.forEach(button => {
     window.addEventListener('load', () => {
-        if (button.classList.contains('comment')) {
-            const comment = parseInt(button.dataset.comment)
-            $.ajax({
-                url: '/rating-comment/?comment=' + comment,
-                type: 'GET',
-                success: function(data) {
-                    if (data.grade) {
-                        pressThumb(button, data.grade);
-                    };
-                },
-                error: function(xhr, status, error) {
-                    alert(error);
-                }
-            });
-        }
+        const rating = parseInt(button.dataset.rating)
+        $.ajax({
+            url: '/get-rating/?rating=' + rating,
+            type: 'GET',
+            success: function(data) {
+                if (data.grade) {
+                    pressThumb(button, data.grade);
+                };
+            },
+            error: function(xhr, status, error) {
+                alert(error);
+            }
+        });
     });
     button.addEventListener('click', event => {
         // Получаем значение рейтинга из data-атрибута кнопки
         const value = parseInt(event.target.dataset.value)
-        const rating = parseInt(event.target.dataset.rating)
+        const rating = parseInt(button.dataset.rating)
         const ratingSum = button.querySelector('.rating-sum');
         // Создаем объект FormData для отправки данных на сервер
         const formData = new FormData();
