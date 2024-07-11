@@ -1,5 +1,6 @@
 from typing import Any
 from django.shortcuts import render, get_object_or_404, redirect, HttpResponseRedirect, resolve_url
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.db.models import Sum
 
@@ -49,7 +50,6 @@ class PostDetailView(DetailView):
         context['form'] = CommentaryCreationForm()
         post = self.get_object()
         context['comments'] = Commentary.objects.filter(post=post, commentary__isnull=True).order_by('-rating__sum_rating')
-        context['user_thumb'] = self.object.rating.grades.filter(user=self.request.user).last()
         return context
     
 class CommentDeleteView(HavePermissionsMixin, View):
@@ -64,7 +64,7 @@ class CommentDeleteView(HavePermissionsMixin, View):
 
         return HttpResponseRedirect(commentary.post.get_absolute_url())
 
-class CommentaryCreateView(View):
+class CommentaryCreateView(LoginRequiredMixin, View):
     form_class = CommentaryCreationForm
     model = Commentary
 
@@ -93,7 +93,7 @@ class CommentaryCreateView(View):
 
         return HttpResponseRedirect(comment.post.get_absolute_url())
     
-class PostDeleteView(HavePermissionsMixin, View):
+class PostDeleteView(LoginRequiredMixin, HavePermissionsMixin, View):
     model = Post
 
     def get_object(self):
@@ -105,7 +105,7 @@ class PostDeleteView(HavePermissionsMixin, View):
 
         return HttpResponseRedirect(post_object.branch.get_absolute_url())
 
-class PostCreateView(TemplateView):
+class PostCreateView(LoginRequiredMixin, TemplateView):
     template_name = "forum/post-create.html"
     form_class = PostCreateForm
     model = Post
@@ -133,7 +133,7 @@ class PostCreateView(TemplateView):
         return HttpResponseRedirect(post_object.get_absolute_url())
 
 
-class GradeCreateView(View):
+class GradeCreateView(LoginRequiredMixin, View):
     model = Grade
     
     def post(self, request, *args, **kwargs):
@@ -161,8 +161,9 @@ class GradeCreateView(View):
         return response
     
 def get_rating_view(request):
-    rating = Rating.objects.get(pk=request.GET.get('rating'))
-    grade = rating.grades.all().filter(user=request.user).last()
-    if grade:
-        return JsonResponse({'grade': grade.value})
+    if request.user.is_authenticated:
+        rating = Rating.objects.get(pk=request.GET.get('rating'))
+        grade = rating.grades.all().filter(user=request.user).last()
+        if grade:
+            return JsonResponse({'grade': grade.value})
     return JsonResponse({'grade': 0})
