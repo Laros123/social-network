@@ -90,8 +90,8 @@ class CommentaryCreateView(LoginRequiredMixin, View):
             rating = Rating.objects.create()
             comment.rating = rating
             comment.save()
-
-        return HttpResponseRedirect(comment.post.get_absolute_url())
+            return HttpResponseRedirect(comment.post.get_absolute_url())
+        return render(request, "forum/comment-create.html", {'form': comment_form})
     
 class PostDeleteView(LoginRequiredMixin, HavePermissionsMixin, View):
     model = Post
@@ -129,8 +129,10 @@ class PostCreateView(LoginRequiredMixin, TemplateView):
             rating = Rating.objects.create()
             post_object.rating = rating
             post_object.save()
+            return HttpResponseRedirect(post_object.get_absolute_url())
+        return render(request, self.template_name, {'form': post_form})
+        
 
-        return HttpResponseRedirect(post_object.get_absolute_url())
 
 
 class GradeCreateView(LoginRequiredMixin, View):
@@ -167,3 +169,19 @@ def get_rating_view(request):
         if grade:
             return JsonResponse({'grade': grade.value})
     return JsonResponse({'grade': 0})
+
+def set_dark_theme(request):
+    request.session['theme'] = 'dark'
+
+    previous_url = request.META.get('HTTP_REFERER')
+    if previous_url:
+        return HttpResponseRedirect(previous_url)
+    return HttpResponseRedirect('/')
+
+def set_light_theme(request):
+    request.session['theme'] = 'light'
+
+    previous_url = request.META.get('HTTP_REFERER')
+    if previous_url:
+        return HttpResponseRedirect(previous_url)
+    return HttpResponseRedirect('/')

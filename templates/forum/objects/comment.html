@@ -2,7 +2,7 @@
     <div>
         <div class="d-flex" style="align-items: flex-end">
             <div style="align-items: flex-end; flex-direction: row; background-color: transparent; border: none;" class="card d-flex">
-                <img style="border-radius: 50%;" src="{{ comment.author.profile.image.url }}" width="38" height="38" class="d-inline-block align-text-top">
+                <img style="border-radius: 50%;" src="{{ comment.author.profile.get_image_url }}" width="38" height="38" class="d-inline-block align-text-top">
                 <small style="font-weight: 500;" class="m-1">{{ comment.author.username }}</small>
                 <a class="stretched-link" href="{% url 'profile' comment.author.profile.pk %}"></a>
             </div>

@@ -1,10 +1,51 @@
+
+
 :root {
-  --bg-color: #ecebeb;
-  --main-color: #fafafa;
+  --bs-heading-color: var(--text-color);
+  --bs-nav-link-color: var(--text-color);
+  --bs-nav-link-hover-color: var(--hovered-color);
+}
+
+.btn-outline-secondary {
+  --bs-btn-color: var(--text-color);
+  --bs-btn-border-color: var(--text-color);
+}
+
+nav {
+  background-color: var(--main-color);
+  border-bottom: 1px solid gray;
+}
+
+.nav-link, .navbar-brand {
+  --bs-navbar-active-color: var(--text-color);
+  --bs-navbar-brand-color: var(--text-color);
+}
+
+.btn-danger {
+  --bs-btn-bg: #75ace9;
+  --bs-btn-border-color: #75ace9;
+  --bs-btn-hover-bg: #5492d7;
+  --bs-btn-hover-border-color: #5492d7;
+  --bs-btn-active-bg: white;
+  --bs-btn-active-border-color: white;
+}
+
+.btn-outline-dark {
+  --bs-btn-hover-bg: var(--btn-color);
+  --bs-btn-hover-color: var(--hovered-i-color);
+  color: var(--text-color);
+}
+
+p, small, a, h2 {
+  color: var(--text-color)
 }
 
 html, body {
   height: 100%;
+}
+
+.form-control {
+  background-color: transparent;
 }
 
 .bold-text {
@@ -12,12 +53,16 @@ html, body {
     font-size: 1.5rem;
 }
 
+.card {
+  border-color: var(--card-color);
+}
+
 .text-area-div {
   width: 30.5rem;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  border: solid #b4b4b4; 
+  border: solid var(--card-color); 
   border-width: 2px;
   border-radius:20px;
   max-height: 100px;
@@ -25,7 +70,7 @@ html, body {
 }
 
 .text-area-div:focus-within {
-  border-color: #222222;
+  border-color: var(--text-color);
   max-height: 50rem;
 }
 

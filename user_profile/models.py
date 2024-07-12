@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 from django.utils.safestring import mark_safe
+from django.templatetags.static import static
 
 # Create your models here.
 
@@ -9,6 +10,12 @@ from django.utils.safestring import mark_safe
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
     image = models.ImageField(upload_to="profile/%Y/%m/%d/", blank=True, null=True)
+
+    def get_image_url(self):
+        url = static('img/anonymous_user.png')
+        if self.image:
+            url = self.image.url
+        return url
 
     def admin_panel_image(self):
         if self.image:
