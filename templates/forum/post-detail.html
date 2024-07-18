@@ -39,16 +39,17 @@
     </div>
 </form>
 
-<h4>Order by</h4>
-<a href="{{ post.get_absolute_url }}?order_by=new" class="btn btn-outline-secondary me-2">New</a>
-<a href="{{ post.get_absolute_url }}" class="btn btn-outline-secondary me-2">Popular</a>
-
-<div class="p-0 mt-2">
-    {% for comment in comments %}
-        {% include 'forum/objects/comment.html' with comment=comment collapse_comments=True %}
-    {% endfor %}
-    
-    {% if not comments.exists %}
+<div class="mt-1">
+    {% if comments.exists %}
+        <h4>Order by</h4>
+        <a href="{{ post.get_absolute_url }}?order_by=new" class="btn btn-outline-secondary me-2">New</a>
+        <a href="{{ post.get_absolute_url }}" class="btn btn-outline-secondary me-2">Popular</a>
+        <div class="p-0 mt-2">
+            {% for comment in comments %}
+                {% include 'forum/objects/comment.html' with comment=comment collapse_comments=True %}
+            {% endfor %}
+        </div>
+    {% else %}
         <p>There are no comments here yet. You can make the first one!</p>
     {% endif %}
 </div>
