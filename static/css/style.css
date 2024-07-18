@@ -31,7 +31,7 @@ nav {
 }
 
 .btn-outline-dark {
-  --bs-btn-hover-bg: var(--btn-color);
+  --bs-btn-hover-bg: var(--hovered-color);
   --bs-btn-hover-color: var(--hovered-i-color);
   color: var(--text-color);
 }
