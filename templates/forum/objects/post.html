@@ -11,7 +11,7 @@
             <p class="m-0"><i class="fa fa-comments" aria-hidden="true"></i> {{ post.comments.all|length }}</p>
         </div>
         {% if request.user.is_authenticated %}
-        {% if request.user == post.author %}
+        {% if request.user == post.author or request.user.is_moderator %}
         <form action="{% url 'post-delete' post.branch.pk post.pk %}" method="post" class="m-2 ms-auto">
             {% csrf_token %}
             <input type="submit" class="btn btn-danger" value="Delete">

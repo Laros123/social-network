@@ -17,7 +17,7 @@
         {% include 'forum/objects/rating-buttons.html' with object=comment %}
         <a class="nav-link dropdown-toggle" style="font-weight: 600;" data-bs-toggle="collapse" href="#CollapseReply{{ comment.pk }}" role="button" aria-expanded="false" aria-controls="CollapseReply{{ comment.pk }}">Reply</a>
         {% if request.user.is_authenticated %}
-        {% if request.user == comment.author %}
+        {% if request.user == comment.author or request.user.is_moderator %}
         <form action="{% url 'comment-delete' comment.post.branch.pk comment.post.pk comment.pk %}" method="post">{% csrf_token %}
             <button type="submit" style="font-weight: 600;" class="nav-link ms-2">Delete</button>
         </form>

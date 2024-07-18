@@ -8,20 +8,20 @@ from .models import NewUser
 
 class NewUserAdmin(UserAdmin):
     model = NewUser
-    list_display = ('id', 'username', "email", "is_staff", "is_active")
+    list_display = ('id', 'username', "email", "is_staff", "is_moderator")
     list_display_links = ('id', 'username')
-    list_filter = ('id', 'username', "email", "is_staff", "is_active",)
+    list_filter = ('id', 'username', "email", "is_staff", "is_moderator",)
     
     fieldsets = (
         (None, {"fields": ("username", "email", "password")}),
-        ("Permissions", {"fields": ("is_staff", "is_active", "groups", "user_permissions")}),
+        ("Permissions", {"fields": ("is_staff", "is_moderator")}),
     )
     add_fieldsets = (
         (None, {
             "classes": ("wide",),
             "fields": (
                 "username", "password1", "password2", "is_staff",
-                "is_active", "groups", "user_permissions"
+                "is_moderator"
             )}
         ),
     )
