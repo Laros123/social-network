@@ -13,6 +13,9 @@
     </div>
 </div>
 <hr>
+<h4>Order by</h4>
+<a href="{% url 'branch-detail' branch.id %}?order_by=new" class="btn btn-outline-secondary me-2">New</a>
+<a href="{% url 'branch-detail' branch.id %}" class="btn btn-outline-secondary me-2">Popular</a>
 {% for post in posts %}
     {% include 'forum/objects/post.html' with post=post %}
 {% endfor %}

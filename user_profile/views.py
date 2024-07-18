@@ -1,7 +1,7 @@
 from typing import Any
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
-from django.views.generic import DetailView
+from django.views.generic import DetailView, TemplateView
 from .models import Profile
 
 # Create your views here.
@@ -26,3 +26,8 @@ class ProfileDetailView(DetailView):
             print(type_of_activity)
             
         return super().get(request, *args, **kwargs)
+
+class SettingsView(DetailView):
+    model = Profile
+    template_name = "profile/settings.html"
+    context_object_name = 'profile'

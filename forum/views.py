@@ -1,7 +1,7 @@
 from typing import Any
 from django.shortcuts import render, get_object_or_404, redirect, HttpResponseRedirect, resolve_url
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import JsonResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.db.models import Sum
 
 from django.views.generic import ListView, DetailView, View, CreateView, TemplateView
@@ -27,7 +27,14 @@ class BranchDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['posts'] = self.get_object().posts.all().order_by('-rating__sum_rating')
+
+        _posts = self.get_object().posts.all()
+        if self.request.GET.get('order_by') is None:
+            _posts = _posts.order_by('-rating__sum_rating')
+        else:
+            _posts = _posts.order_by('-created')
+        context['posts'] = _posts
+
         return context
 
 class PostListView(ListView):
@@ -37,7 +44,14 @@ class PostListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['posts'] = self.model.objects.order_by('-rating__sum_rating')
+
+        _posts = self.model.objects
+        if self.request.GET.get('order_by') is None:
+            _posts = self.model.objects.order_by('-rating__sum_rating')
+        else:
+            _posts = _posts.order_by('-created')
+        context['posts'] = _posts
+
         return context
 
 class PostDetailView(DetailView):
@@ -49,7 +63,14 @@ class PostDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['form'] = CommentaryCreationForm()
         post = self.get_object()
-        context['comments'] = Commentary.objects.filter(post=post, commentary__isnull=True).order_by('-rating__sum_rating')
+
+        _comments = Commentary.objects.filter(post=post, commentary__isnull=True)
+        if self.request.GET.get('order_by') is None:
+            _comments = _comments.order_by('-rating__sum_rating')
+        else:
+            _comments = _comments.order_by('-created')
+        context['comments'] = _comments
+
         return context
     
 class CommentDeleteView(HavePermissionsMixin, View):
@@ -131,8 +152,6 @@ class PostCreateView(LoginRequiredMixin, TemplateView):
             post_object.save()
             return HttpResponseRedirect(post_object.get_absolute_url())
         return render(request, self.template_name, {'form': post_form})
-        
-
 
 
 class GradeCreateView(LoginRequiredMixin, View):

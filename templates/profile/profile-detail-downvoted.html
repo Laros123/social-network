@@ -14,7 +14,7 @@
     {% if grade.value == -1 %}
         {% if grade.rating.post %}
             {% include 'forum/objects/post.html' with post=grade.rating.post branch=grade.rating.post.branch %}
-        {% else %}
+        {% elif grade.rating.comment %}
             {% include 'forum/objects/comment.html' with comment=grade.rating.comment collapse_comments=False %}
         {% endif %}
     {% endif %}
