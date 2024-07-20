@@ -1,8 +1,11 @@
 from typing import Any
 from django.http import HttpRequest, HttpResponse
+from auth_sys.models import NewUser
+import auth_sys.forms as user_form
 from django.shortcuts import render
-from django.views.generic import DetailView, TemplateView
+from django.views.generic import DetailView, TemplateView, UpdateView
 from .models import Profile
+from django.urls import reverse_lazy
 
 # Create your views here.
 
@@ -22,12 +25,5 @@ class ProfileDetailView(DetailView):
             self.template_name = "profile/profile-detail-upvoted.html"
         elif type_of_activity == 'downvoted':
             self.template_name = "profile/profile-detail-downvoted.html"
-        if type_of_activity == 'none':
-            print(type_of_activity)
             
         return super().get(request, *args, **kwargs)
-
-class SettingsView(DetailView):
-    model = Profile
-    template_name = "profile/settings.html"
-    context_object_name = 'profile'
